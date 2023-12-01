@@ -5,12 +5,13 @@ import type { AuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '@/firebase'
+import { app, auth } from '@/firebase'
 import { User } from 'next-auth'
 import { resend } from '@/utils/resend'
 import MagicLinkEmail from '@/emails/MagigLink'
 import { toast } from 'react-hot-toast'
 import EmailProvider from 'next-auth/providers/email'
+import { cert } from 'firebase-admin/app'
 
 function text({ url, host }: { url: string; host: string }) {
    return `Sign in to ${host}\n${url}\n\n`
@@ -101,7 +102,7 @@ export const authOptions: AuthOptions = {
          return token
       },
    },
-   adapter: FirestoreAdapter(firestore),
+   adapter: FirestoreAdapter(app),
    session: {
       strategy: 'jwt',
    },
